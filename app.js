@@ -9,10 +9,10 @@ const userRouter = require('./routes/userRoutes');
 
 // 1) Middleware
 app.use(helmet());
-app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
+app.use(express.static(`${__dirname}/public`));
 app.use((req, res, next) => {
   const { url } = req;
   console.log(`Hello route ${url} from my custom middleware`);

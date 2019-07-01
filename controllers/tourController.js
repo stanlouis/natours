@@ -12,6 +12,17 @@ exports.checkID = (req, res, next, id) => {
   next();
 };
 
+// middleware to validate create tour route
+exports.checkBody = (req, res, next) => {
+  const { name, price } = req.body;
+  if (!name || !price) {
+    return res
+      .status(400)
+      .json({ status: 'fail', message: 'Missing name or price' });
+  }
+  next();
+};
+
 // Tours Handlers
 exports.deleteTour = (req, res) => {
   return res.status(204).json({
@@ -32,7 +43,7 @@ exports.createTour = (req, res) => {
   const newTour = { ...req.body, id: newId };
   tours.push(newTour);
   fs.writeFile(
-    `${__dirname}/dev-data/data/tours-simple.json`,
+    `${__dirname}/../dev-data/data/tours-simple.json`,
     JSON.stringify(tours),
     (err, data) => {
       if (err) console.log(err);
