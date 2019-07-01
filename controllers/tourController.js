@@ -4,12 +4,16 @@ const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
 );
 
-// Tours Handlers
-exports.deleteTour = (req, res) => {
-  const id = parseInt(req.params.id);
-  if (id > tours.length) {
+// callback function to validate Id through param middleware
+exports.checkID = (req, res, next, id) => {
+  if (id * 1 > tours.length) {
     return res.status(404).send({ status: 'fail', message: 'invalid id' });
   }
+  next();
+};
+
+// Tours Handlers
+exports.deleteTour = (req, res) => {
   return res.status(204).json({
     status: 'success',
     data: null
@@ -17,10 +21,6 @@ exports.deleteTour = (req, res) => {
 };
 
 exports.updateTour = (req, res) => {
-  const id = parseInt(req.params.id);
-  if (id > tours.length) {
-    return res.status(404).send({ status: 'fail', message: 'invalid id' });
-  }
   return res.status(200).json({
     status: 'success',
     data: { tour: '<Updated tour here...>' }
@@ -45,16 +45,12 @@ exports.createTour = (req, res) => {
 };
 
 exports.getTour = (req, res) => {
-  const id = parseInt(req.params.id);
-  const tour = tours.find(el => el.id === id);
-  if (!tour) {
-    return res.status(404).send({ status: 'fail', message: 'invalid id' });
-  }
   res.status(200).json({
     status: 'success',
-    data: { tour: tour }
+    data: { tour: 'On the todo list' }
   });
 };
+
 exports.getAllTours = (req, res) => {
   res.status(200).json({
     status: 'success',

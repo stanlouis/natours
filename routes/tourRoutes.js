@@ -3,12 +3,16 @@ const express = require('express');
 const router = express.Router();
 
 const {
+  checkID,
   getTour,
   getAllTours,
   createTour,
   updateTour,
   deleteTour
 } = require('../controllers/tourController');
+
+// Param middleware
+router.param('id', checkID);
 
 router
   .route('/')
