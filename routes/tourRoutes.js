@@ -3,8 +3,6 @@ const express = require('express');
 const router = express.Router();
 
 const {
-  checkID,
-  checkBody,
   getTour,
   getAllTours,
   createTour,
@@ -12,13 +10,10 @@ const {
   deleteTour
 } = require('../controllers/tourController');
 
-// Param middleware
-router.param('id', checkID);
-
 router
   .route('/')
   .get(getAllTours)
-  .post(checkBody, createTour);
+  .post(createTour);
 
 router
   .route('/:id')
