@@ -1,18 +1,32 @@
 const Tour = require('./../models/tourModel');
 
 // Tours Handlers
-exports.deleteTour = (req, res) => {
-  return res.status(204).json({
-    status: 'success',
-    data: null
-  });
+exports.deleteTour = async (req, res) => {
+  try {
+    await Tour.findByIdAndDelete(req.params.id);
+    return res.status(204).json({
+      status: 'success',
+      data: null
+    });
+  } catch (e) {
+    res.status(400).json({ status: 'fail', message: e.message });
+  }
 };
 
-exports.updateTour = (req, res) => {
-  return res.status(200).json({
-    status: 'success',
-    data: { tour: '<Updated tour here...>' }
-  });
+exports.updateTour = async (req, res) => {
+  try {
+    const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true
+    });
+
+    res.status(200).json({
+      status: 'success',
+      data: { tour: tour }
+    });
+  } catch (e) {
+    res.status(400).json({ status: 'fail', message: e.message });
+  }
 };
 
 exports.createTour = async (req, res) => {
