@@ -27,20 +27,30 @@ exports.createTour = async (req, res) => {
   }
 };
 
-exports.getTour = (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    data: { tour: 'On the todo list' }
-  });
+exports.getTour = async (req, res) => {
+  try {
+    const tour = await Tour.findById(req.params.id); // Tour.findOne({_id: req.params.id})
+    res.status(200).json({
+      status: 'success',
+      data: { tour }
+    });
+  } catch (e) {
+    res.status(400).json({ status: 'fail', message: e.message });
+  }
 };
 
-exports.getAllTours = (req, res) => {
-  res.status(200).json({
-    status: 'success'
-    // results: tours.length,
-    // requestedAt: req.requestTime,
-    // data: {
-    //   tours: tours
-    // }
-  });
+exports.getAllTours = async (req, res) => {
+  try {
+    const tours = await Tour.find();
+    res.status(200).json({
+      status: 'success',
+      results: tours.length,
+      requestedAt: req.requestTime,
+      data: {
+        tours: tours
+      }
+    });
+  } catch (e) {
+    res.status(400).json({ status: 'fail', message: e.message });
+  }
 };
